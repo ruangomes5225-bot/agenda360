@@ -45,7 +45,6 @@ jobs:
           export PATH=$PATH:/usr/local/xenon/bin
           cd "$HOME/libxenon/toolchain"
           ./build-xenon-toolchain libxenon
-          ./build-xenon-toolchain libs
 
       - name: Salvar cache completo
         if: steps.cache.outputs.cache-hit != 'true'
@@ -58,6 +57,7 @@ jobs:
         run: |
           export DEVKITXENON=/usr/local/xenon
           export PATH=$PATH:/usr/local/xenon/bin
+          ls /usr/local/xenon /usr/local/xenon/bin | head -40
           make
 
       - name: Salvar resultado
