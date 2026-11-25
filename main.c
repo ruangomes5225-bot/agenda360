@@ -9,6 +9,8 @@
 #include <time/time.h>
 #include <xenon_soc/xenon_power.h>
 
+void kmem_init(void);
+
 #define MAX_NOTES 200
 #define TEXT_LEN 100
 #define SAVE_FILE "uda:/agenda360.txt"
