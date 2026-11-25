@@ -74,10 +74,21 @@ static void load_notes(void) {
     fclose(f);
 }
 
+static int dbg_x[4];
+
 static void poll(void) {
+    struct controller_data_s t;
     p = c;
     usb_do_poll();
-    get_controller_data(&c, 0);
+    memset(&c, 0, sizeof c);
+    for (int i = 0; i < 4; i++) {
+        memset(&t, 0, sizeof t);
+        get_controller_data(&t, i);
+        dbg_x[i] = t.s1_x;
+        c.a |= t.a; c.b |= t.b; c.x |= t.x; c.y |= t.y;
+        c.up |= t.up; c.down |= t.down; c.left |= t.left; c.right |= t.right;
+        c.start |= t.start; c.back |= t.back;
+    }
 }
 #define PRESSED(b) (c.b && !p.b)
 
@@ -132,6 +143,12 @@ int main(void) {
     usb_do_poll();
     memset(&c, 0, sizeof c);
     memset(&p, 0, sizeof p);
+    for (int w = 0; w < 100; w++) {
+        console_clrscr();
+        printf("Procurando controle USB... %d\n", 100 - w);
+        poll();
+        udelay(50000);
+    }
     load_notes();
 
     static const char *dias[] = {"Dom","Seg","Ter","Qua","Qui","Sex","Sab"};
@@ -158,6 +175,8 @@ int main(void) {
         }
         printf("\nEsq/Dir: dia | Cima/Baixo: semana | A: editar\n");
         printf("%s\n", status);
+        printf("\n[teste] a=%d up=%d dir=%d x0=%d x1=%d x2=%d x3=%d\n",
+               c.a, c.up, c.right, dbg_x[0], dbg_x[1], dbg_x[2], dbg_x[3]);
         udelay(30000);
     }
     return 0;
