@@ -17,6 +17,7 @@ void kmem_init(void);
 
 static struct controller_data_s c, p;
 static int dbg_x[4];
+static int dbg_r[4];
 static unsigned int seed = 12345;
 
 static int rnd(int n) {
@@ -31,7 +32,7 @@ static void poll(void) {
     memset(&c, 0, sizeof c);
     for (int i = 0; i < 4; i++) {
         memset(&t, 0, sizeof t);
-        get_controller_data(&t, i);
+        dbg_r[i] = get_controller_data(&t, i);
         dbg_x[i] = t.s1_x;
         c.a |= t.a;
         c.start |= t.start;
@@ -65,9 +66,9 @@ int main(void) {
     memset(&c, 0, sizeof c);
     memset(&p, 0, sizeof p);
 
-    for (int w = 0; w < 60; w++) {
+    for (int w = 0; w < 200; w++) {
         console_clrscr();
-        printf("Procurando controle USB... %d\n", 60 - w);
+        printf("Procurando controle USB... %d\n", 200 - w);
         poll();
         udelay(50000);
     }
@@ -109,6 +110,7 @@ int main(void) {
             }
         }
         printf("\n[teste] a=%d x0=%d x1=%d x2=%d x3=%d\n", c.a, dbg_x[0], dbg_x[1], dbg_x[2], dbg_x[3]);
+        printf("[ret] r0=%d r1=%d r2=%d r3=%d\n", dbg_r[0], dbg_r[1], dbg_r[2], dbg_r[3]);
         udelay(50000);
     }
     return 0;
