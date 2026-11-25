@@ -138,9 +138,10 @@ int main(void) {
     xenon_make_it_faster(XENON_SPEED_FULL);
     xenos_init(VIDEO_MODE_AUTO);
     console_init();
-    xenon_ata_init();
+    kmem_init();
     usb_init();
     usb_do_poll();
+    xenon_ata_init();
     memset(&c, 0, sizeof c);
     memset(&p, 0, sizeof p);
     for (int w = 0; w < 100; w++) {
